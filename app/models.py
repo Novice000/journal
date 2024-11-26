@@ -5,6 +5,7 @@ from mongoengine import Document, StringField
 
 class User (Document):
     meta = {"collection":"user"}
+    #fields of the model
     username = StringField(max_length=150, unique=True, required=True)
     email = StringField(max_length=255, unique=True, required=True)
     password = StringField(required=True)
@@ -16,7 +17,7 @@ class User (Document):
     def __str__(self):
         return self.username
 
-    def has_perm(self, perm, obj=None):
+    def has_perm(self, perm, obj=None):# -> BooleanField | Any:
         return self.is_superuser
 
     def has_module_perms(self, app_label):
@@ -36,6 +37,7 @@ class Task(EmbeddedDocument):
     
 class Entries(Document):
     meta = {"collection":"entries"}
+    #fields of the model
     user = ReferenceField(User, required=True)
     text = StringField(required= True)
     review = StringField()
