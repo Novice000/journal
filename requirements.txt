@@ -1,0 +1,7 @@
+django
+djangorestframework
+djangorestframework-simplejwt
+pymongo
+monogoengine
+django-rest-framework-mongoengine
+dotenv
