@@ -41,5 +41,5 @@ class Entries(Document):
     user = ReferenceField(User, required=True)
     text = StringField(required= True)
     review = StringField()
-    task = ListField(EmbeddedDocumentField(Task))
+    tasks = ListField(EmbeddedDocumentField(Task))
     timestamp = DateTimeField(default=now)

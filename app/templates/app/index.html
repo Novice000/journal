@@ -4,51 +4,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'main.css' %}">
+    <link rel="stylesheet" href="{% static 'app/main.css' %}">
+    <script type="module" src="{% static 'app/main.js' %}"></script>
     <title>Journal</title>
 </head>
 <body>
-    <div>
+    <div class="out">
         <div>
-            <span id="name"> </span>'s Journal
-            <span id="date"> </span>
+            <h2>Journal</h2>
+            <button id="go-in">Go In</button>
         </div>
     </div>
-    <div>
-        <nav class="nav nav-pills nav-fill">
-            <a class="nav-link active" aria-current="page">Entries</a>
-            <a class="nav-link">Create Entry</a>
-          </nav>
-    </div>
-
-    <!-- entry page with form -->
-    <div class="entry-page">
-
-        <form>
+    <div class="in" id="inside">
+        <div>
             <div>
-                <div>
-                    <textarea name="text" id="text"></textarea>
-                </div>
-                <div>
-                    <div class="checkbox-container">
-
+                <span id="name"> </span>'s Journal
+                <span id="date"> </span>
+            </div>
+        </div>
+        <div>
+            <nav class="nav nav-pills nav-fill">
+                <a class="nav-link active" aria-current="page" data-page ="entries" id="entries-setter" >Entries</a>
+                <a class="nav-link" data-page ="entry" id="entry-setter">Create Entry</a>
+              </nav>
+        </div>
+        <!-- entry page with form -->
+        <div class="entry-page">
+            <form>
+                <div class="form-container">
+                    <div>
+                        <div>
+                            <textarea name="text" id="text"></textarea>
+                        </div>
+                        <div>
+                            <div class="checkbox-container">
+                            </div>
+                            <div>
+                                <input type="text" name="task" id="task_input">
+                                <button id="add-task">Enter Task</button>
+                            </div>
+                        </div>
                     </div>
                     <div>
-                        <input type="text" name="task" id="task_input">
-                        <button>Enter Task</button>
+                        <textarea name="review" id="review"></textarea>
+                        <input type="submit" id ="submit" value="enter">
                     </div>
                 </div>
-            </div>
-            <div>
-                <textarea name="review" id="review"></textarea>
-                <input type="submit" value="enter">
-            </div>
-        </form>
-    </div>
-
-    <!-- list of user entries -->
-    <div class="entries">
+            </form>
+        </div>
+        <!-- list of user entries -->
+        <div class="entries">
         
+        </div>
     </div>
 </body>
 </html>
