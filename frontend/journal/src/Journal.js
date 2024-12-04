@@ -1,23 +1,28 @@
 import React, {useEffect, useState} from "react";
-import { isAccessTokenExpired, isRefreshTokenExpired, refreshToken, getUser } from "./utils/helper";
+import { getUser } from "./utils/helper";
 import { Link, useNavigate} from "react-router"
 
 export default function Journal({ children }) {
-    const [user, setUSer] = useState({})
+    const [user, setUser] = useState({username:"", email:""})
 
     const navigate = useNavigate()
     useEffect(() => {
-        if (isAccessTokenExpired() && !isRefreshTokenExpired()) {
-            refreshToken();
-        } else if (isAccessTokenExpired() && isRefreshTokenExpired()) {
-            navigate("/login");
-        } else {
-            const currentUser = getUser();
-            if (JSON.stringify(user) !== JSON.stringify(currentUser)) {
-                setUSer(currentUser);
+        async function fetchUser() {
+        try {
+            const response = await getUser();
+            if (response.status !== 200){
+               throw new Error("Unable to fetch user")
             }
+            const currentUser = response.data
+            if (currentUser) {
+              setUser(currentUser);
+            }
+          } catch (e) {
+            console.error("Error fetching user:", e);
+          }
+    }; fetchUser()
         }
-    }, [navigate, user]);
+      , [navigate]);
     
 
     function handleLogOut(){
@@ -36,6 +41,9 @@ export default function Journal({ children }) {
             <div>
                 <nav>
                     <ul>
+                        <li>
+                           <Link to="/"> Home </Link>
+                        </li>
                         <li>
                             <Link to="/entries">My Entries</Link>
                         </li>

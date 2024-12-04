@@ -1,21 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axiosInstance from "./utils/config.js";
-import {useNavigate} from "react-router"
-import { isAccessTokenExpired, isRefreshTokenExpired, refreshToken } from "./utils/helper.js";
 
 export default function Entry(){
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        if (isAccessTokenExpired() && !isRefreshTokenExpired()) {
-            refreshToken(); // Attempt to refresh token
-        } else if (isAccessTokenExpired() && isRefreshTokenExpired()) {
-            navigate("/login"); // Redirect to login if both tokens expired
-            return
-        }
-    }, [navigate]);
-
-    const [formData, setFormData] = useState({task:[]})
+    const [formData, setFormData] = useState({ text: "", review: "", tasks: [] });
     const [taskInput, setTaskInput] = useState({task:"", completed:false})
 
     function TaskSelect({task}){
@@ -32,16 +19,16 @@ export default function Entry(){
 
       // Toggle completion status of a task
   function toggleComplete(task) {
-    const updatedTasks = formData.task.map((t) =>
+    const updatedTasks = formData.tasks.map((t) =>
       t.task === task.task
         ? { ...t, completed: !t.completed }
         : t
     );
-    setFormData((formata)=>({ ...formData, task: updatedTasks }));
+    setFormData((formata)=>({ ...formData, tasks: updatedTasks }));
   }
 
     function handleTaskChange(e){
-        let value = e.target.value.trim()
+        let value = e.target.value
         if (value){
             setTaskInput((prev)=>({
             ...prev,
@@ -55,7 +42,7 @@ export default function Entry(){
         if (taskInput.task){
             setFormData((prev)=>({
                 ...prev,
-                task: [...prev.task, taskInput]
+                tasks: [...prev.tasks, taskInput]
             }))
             setTaskInput({task:"", completed:false})
         }
@@ -72,13 +59,14 @@ export default function Entry(){
    async function handleFormSubmit(e){
         e.preventDefault()
         try{
-            const response = await axiosInstance.post("entry/create/",formData)
-            if(response.status !== 201){
+            const response = await axiosInstance.post("entry/create/", formData)
+            console.log(response)
+            if(response.statusText !== "Created"){
                throw new Error("Failed to add entry")
             }else{
                 const data = response.data
                 console.log(data)
-                setFormData({task:[]})
+                setFormData({ text: "", review: "", tasks: [] })
             }
         }
         catch(error){
@@ -111,7 +99,7 @@ export default function Entry(){
                     {/* task input pane */}
                     <div>
                         <div>
-                            {formData.task.map((element, index)=> <TaskSelect key={index} task={element} />)}
+                            {formData.tasks.map((element, index)=> <TaskSelect key={index} task={element} />)}
                         </div>
                         <div>
                             <input
@@ -137,7 +125,8 @@ export default function Entry(){
                         <textarea
                         name="review"
                         id="review"
-                        value = {formData.review }
+                        value = {formData.review}
+                        placeholder="your review"
                         onChange={handleFormChange}>
                         </textarea>
                     </div>

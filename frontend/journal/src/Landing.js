@@ -1,4 +1,4 @@
-import "./App.css"
+import "./styles/App.css"
 import {useNavigate} from "react-router"
 
 export default function Landingpage(){

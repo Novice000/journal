@@ -1,60 +1,55 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import axiosInstance from "./utils/config";
-import { isAccessTokenExpired, isRefreshTokenExpired, refreshToken } from "./utils/helper";
-import {useNavigate} from "react-router"
+import "./styles/App.css"
 
 export default function Entries(){
     const [entries, setEntries] = useState([])
+    const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
 
-    async function getEntries(){
-        try{
-            const response = await axiosInstance.get("/entries/")
-            if(response.status !== 201){
-                throw new Error("Request failed!")
-            }
-            const result = response.data()? response.data: []
-            return result
-        }catch(e){
-            alert("failed to get entres", e)
-        }
-    }
-
     useEffect(() => {
-        if (isAccessTokenExpired() && !isRefreshTokenExpired()) {
-            refreshToken(); // Attempt to refresh token
-        } else if (isAccessTokenExpired() && isRefreshTokenExpired()) {
-            navigate("/login"); // Redirect to login if both tokens expired
-            return
-        }
-        setEntries(getEntries);
-    }, [navigate]);
-
-
-
-    async function handleClick(e){
-        try{
-            const id = e.target.id
-            const response = await axiosInstance.get(`/entry/${id}`)
-            if(response.status !== 201 || response.status !== 200){
-                throw new Error("failed to fetch")
+        async function fetchEntries(){
+            async function getEntries(){
+                try{
+                    const response = await axiosInstance.get("/entries/")
+                    if(response.statusText !== "OK"){
+                        throw new Error("Request failed!")
+                    }
+                    const result = response.data? response.data: []
+                    return result
+                }catch(e){
+                    alert(e)
+                }finally{
+                    setLoading(false)
+                }
             }
-            navigator("/update")
-        }catch(e){
-            return <div>
-                <h2> {e} </h2>
+
+            const data = await getEntries()
+            if (entries){
+                setEntries(data)
+                setLoading(false)
+            };
+        } fetchEntries()
+    }, []);
+
+    if(loading){
+        return (
+            <div>
+                loading . . .
             </div>
-        }
+        )
     }
 
-    function Entry(data){
+    function handleClick(id){
+        navigate(`/update/${id}`)
+    }
+
+    function Entry({data}){
         const len = data.text.length > 200? 200 : data.text.length;
         return(
-            <div id={data.id}
-            onClick={handleClick}>
-                <div>
-                    {data.user.username}
-                </div>
+            <div className="border" id={data.id}
+            onClick={()=>{ handleClick(data.id) }}>
                 <div>
                     {data.text.substring(0,len)}...
                 </div>
@@ -62,14 +57,20 @@ export default function Entries(){
                     {data.review}
                 </div>
                 <div> 
-                    {data.timeStamp}
+                    {new Date(data.timestamp).toLocaleString()}
                 </div>
             </div>
         )
     }
 
+    if(loading){
+        return (
+            <div>
+                loading . . .
+            </div>
+        )
+    }
 
-    setEntries(getEntries())
     if(!entries.length){
         return(
             <div>

@@ -26,3 +26,29 @@ class EntriesSerializer(DocumentSerializer):
         model = Entries
         fields = ["id","text","review", "tasks", "timestamp"]
         read_only_fields =["user","id","timestamp"]
+        
+    def create(self, validated_data):
+        tasks_data = validated_data.pop('tasks', [])  # Get tasks data from validated data
+        entry = Entries.objects.create(**validated_data)  # Create the entry
+
+            # Now handle the creation of tasks
+        for task_data in tasks_data:
+            task = Task(**task_data)  # Create task objects
+            entry.tasks.append(task)  # Append to the entry's tasks list
+
+        entry.save()  # Save the entry with the tasks
+        return entry
+    
+    def update(self, instance, validated_data):
+        tasks_data = validated_data.pop("tasks",[])
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+            
+            instance.tasks.clear()
+            
+        for task_data in tasks_data:
+            task = Task(**task_data)
+            instance.tasks.append(task)
+         
+        instance.save()
+        return instance

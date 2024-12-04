@@ -3,6 +3,7 @@ from django.utils.timezone import now
 from django.contrib.auth.hashers import make_password, check_password
 from mongoengine import Document, StringField
 from bson import ObjectId
+from django.contrib.auth.models import User
 
 class User (Document):
     meta = {"collection":"User"}
@@ -28,6 +29,7 @@ class User (Document):
     def has_perm(self, perm, obj=None):# -> BooleanField | Any:
         return self.is_superuser
 
+
     def has_module_perms(self, app_label):
         return self.is_superuser
     
@@ -49,6 +51,6 @@ class Entries(Document):
     id = ObjectIdField(primary_key=True, default=ObjectId) 
     user = ReferenceField(User, required=True)
     text = StringField(required= True)
-    review = StringField()
+    review = StringField(max_length=300)
     tasks = ListField(EmbeddedDocumentField(Task))
     timestamp = DateTimeField(default=now)

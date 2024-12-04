@@ -1,23 +1,44 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "./utils/config.js";
-import { isAccessTokenExpired, isRefreshTokenExpired, refreshToken } from "./utils/helper.js";
-import {useNavigate} from "react-router";
+import { useParams } from "react-router";
+import { ObjectId } from "bson"
 
-export default function UpdateEntry({data}){
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        if (isAccessTokenExpired() && !isRefreshTokenExpired()) {
-            refreshToken(); // Attempt to refresh token
-        } else if (isAccessTokenExpired() && isRefreshTokenExpired()) {
-            navigate("/login"); // Redirect to login if both tokens expired
-            return
-        }
-    }, [navigate]);
-
-    const [formData, setFormData] = useState({task:[]})
+export default function UpdateEntry(){
+    const { id } = useParams();
+    const [formData, setFormData] = useState({text:"", review:"",tasks:[]})
     const [taskInput, setTaskInput] = useState({task:"", completed:false})
-    setFormData(data)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(()=>{
+        async function fetchEntry(){
+            if(ObjectId.isValid(id)){
+                try{ const response = await axiosInstance.get(`/entry/${id}/`)
+                 if(response.status !==200){
+                     return(
+                         <div>
+                             Failed to fetch entry
+                         </div>
+                     )
+                 }
+                 setFormData(response.data)
+             }catch(e){
+                     console.log(e)
+                 } finally{
+                     console.log(formData)
+                     setLoading(false)
+                 }
+            } else {
+                return(
+                    <>
+                        <h2>
+                            Invalid Entry
+                        </h2>
+                    </>
+                )
+            }
+        }; fetchEntry()
+    }, [id])
+
     function TaskSelect({task}){
         return (<>
             <label>
@@ -32,12 +53,12 @@ export default function UpdateEntry({data}){
 
       // Toggle completion status of a task
   function toggleComplete(task) {
-    const updatedTasks = formData.task.map((t) =>
+    const updatedTasks = formData.tasks.map((t) =>
       t.task === task.task
         ? { ...t, completed: !t.completed }
         : t
     );
-    setFormData((formata)=>({ ...formData, task: updatedTasks }));
+    setFormData((prev)=>({ ...prev, tasks: updatedTasks }));
   }
 
     function handleTaskChange(e){
@@ -55,8 +76,8 @@ export default function UpdateEntry({data}){
         if (taskInput.task){
             setFormData((prev)=>({
                 ...prev,
-                task: [...prev.task, taskInput]
-            }))
+                tasks: [...prev.tasks, taskInput]
+            }));
             setTaskInput({task:"", completed:false})
         }
     }
@@ -66,25 +87,43 @@ export default function UpdateEntry({data}){
         setFormData((prev)=>({
             ...prev,
             [name]: value,
-        }))
+        }));
     }
 
    async function handleFormSubmit(e){
         e.preventDefault()
         try{
-            const response = await axiosInstance.put(`update/entry/${formData.id}`,formData)
-            if(response.status !== 201){
-               throw new Error("Failed to add entry")
-            }else{
-                const data = await response.json()
-                console.log(data)
-                setFormData({task:[]})
+            const response = await axiosInstance.put(`update/entry/${id}/`,formData)
+            if(response.status !== 201 && response.status !== 200){
+               throw new Error("Failed to update entry")
             }
-        }
-        catch(error){
-            alert(error)
+                alert("updated successfully")
+                setFormData({text:"", review: "", tasks:[]})
+        } catch(error){
+            alert(error.nessage)
         }
        
+    }
+
+    // async function handleFormSubmit(e) {
+    //     e.preventDefault();
+    //     try {
+    //       const response = await axiosInstance.put(`/entry/${id}/`, formData); // Fixed PUT request URL
+    //       if (response.status !== 200 && response.status !== 201) {
+    //         throw new Error("Failed to update entry"); // Corrected error handling for status codes
+    //       }
+    //       alert("Entry updated successfully!"); // Added success feedback
+    //     } catch (error) {
+    //       alert(error.message); // Improved error alert
+    //     }
+    //   }
+
+    if(loading){
+        return(
+            <>
+            loading ...
+            </>
+        )
     }
 
     return(
@@ -111,14 +150,14 @@ export default function UpdateEntry({data}){
                     {/* task input pane */}
                     <div>
                         <div>
-                            {formData.task.map((element, index)=> <TaskSelect key={index} task={element} />)}
+                            {formData.tasks.map((element, index)=> <TaskSelect key={index} task={element} />)}
                         </div>
                         <div>
                             <input
                             type="text"
                             onChange={handleTaskChange}
                             className=""
-                            value = {taskInput.task}
+                            value = {taskInput.task || ""}
                             placeholder="Enter Task"
                             />
                             <button

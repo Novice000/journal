@@ -25,14 +25,17 @@ export default function  LogIn(){
             const response = await cred.post("/login/", formData)
             if(response.status !== 200){
                 throw new Error("Requet failed!")
+               
             }
             const {access, refresh} = response.data
+            localStorage.removeItem("ACCESS_TOKEN")
             localStorage.setItem("ACCESS_TOKEN", access)
+            localStorage.removeItem("REFRESH_TOKEN")
             localStorage.setItem("REFRESH_TOKEN", refresh)
             navigate("/entry")
         }
         catch(error){
-            alert("Error:", error)
+            alert("Error:", error.message)
         }
     }
 

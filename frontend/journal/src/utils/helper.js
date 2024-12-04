@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode"
-import axiosInstance from "./config";
+import axiosInstance, { cred } from "./config";
 
 // Helper function to check if the token is expired
 function isAccessTokenExpired() {
@@ -45,31 +45,26 @@ async function refreshToken() {
     }
   
     try {
-        const response = await fetch("/refresh", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ refresh: refreshToken }), // Send the refresh token to server
-        });
-        if (!response.ok) {
+        const response = await cred.post("/refresh/", {refresh: refreshToken})
+        if (response.statusText !== "OK") {
             throw new Error("Failed to refresh access token.");
         }
-        const result_1 = await response.json();
-        localStorage.setItem("ACCESS_TOKEN", result_1.access); // Store the new access token
-        return result_1.access;
+        const result =  response.data;
+        localStorage.setItem("ACCESS_TOKEN", result.access); // Store the new access token
+        return result.access;
     } catch (error) {
         console.error("Error refreshing token:", error);
     }
 }
 
 async function getUser(){
+  const id = jwtDecode(localStorage.getItem("ACCESS_TOKEN")).user_id
   try{
-    const response = await axiosInstance.get("/user/")
-    if(response.status !== 201){
+    const response = await axiosInstance.get(`/user/${id}`)
+    if(response.status !== 201 && response.status !== 200){
       throw new Error("failed to get user")
     }
-    const result = await response.json()
+    const result = await response
     return result
   }catch(e){
     alert(e)
