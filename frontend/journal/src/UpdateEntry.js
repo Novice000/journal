@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "./utils/config.js";
 import { useParams } from "react-router";
 import { ObjectId } from "bson"
+import "./styles/App.css"
+import { HashLoader } from "react-spinners";
 
 export default function UpdateEntry(){
     const { id } = useParams();
@@ -13,7 +15,7 @@ export default function UpdateEntry(){
         async function fetchEntry(){
             if(ObjectId.isValid(id)){
                 try{ const response = await axiosInstance.get(`/entry/${id}/`)
-                 if(response.status !==200){
+                 if(response.status !== 200){
                      return(
                          <div>
                              Failed to fetch entry
@@ -22,7 +24,16 @@ export default function UpdateEntry(){
                  }
                  setFormData(response.data)
              }catch(e){
-                     console.log(e)
+                     <div>
+                        <h2>
+                            Error
+                        </h2>
+                        <p>
+                        {e.message}
+                        </p>
+                        <>
+                        try reloading</>
+                     </div>
                  } finally{
                      console.log(formData)
                      setLoading(false)
@@ -62,7 +73,7 @@ export default function UpdateEntry(){
   }
 
     function handleTaskChange(e){
-        let value = e.target.value.trim()
+        let value = e.target.value
         if (value){
             setTaskInput((prev)=>({
             ...prev,
@@ -118,72 +129,78 @@ export default function UpdateEntry(){
     //     }
     //   }
 
-    if(loading){
-        return(
-            <>
-            loading ...
-            </>
-        )
-    }
+    if (loading) {
+        return (
+          <div className="loader-container">
+            <HashLoader loading={loading} color="#3e2723" size={20} />
+          </div>
+        );
+      }
 
     return(
-        <div>
+        <div className="diary">
             <form
             onSubmit={handleFormSubmit}>
-                {/* text entry for journal */}
-                <div>
-                        <label
-                        htmlFor="text">
-                            Text Entry
-                        </label>
-
-                        <textarea 
-                            name="text"
-                            id="text"
-                            value={formData.text}
-                            placeholder="Write Something"
-                            onChange={handleFormChange}>
-                        </textarea>
-                </div>
-                {/* side entry of journal */}
-                <div>
-                    {/* task input pane */}
-                    <div>
-                        <div>
-                            {formData.tasks.map((element, index)=> <TaskSelect key={index} task={element} />)}
-                        </div>
-                        <div>
-                            <input
-                            type="text"
-                            onChange={handleTaskChange}
-                            className=""
-                            value = {taskInput.task || ""}
-                            placeholder="Enter Task"
-                            />
-                            <button
-                            type="button"
-                            onClick={addTask}>
-                                Add Task
-                            </button>
-                        </div>
+                <div class="form-group">
+                    {/* text entry for journal */}
+                    <div className="text">
+                            <label
+                            htmlFor="text"
+                            className="entry-label">
+                                Entry:
+                            </label>
+                            <textarea
+                                name="text"
+                                id="text"
+                                className="text-area"
+                                value={formData.text}
+                                placeholder="Write Something"
+                                onChange={handleFormChange}>
+                            </textarea>
                     </div>
-
-                    {/* review input fields */}
-                    <div>
-                        <label htmlFor="review">
-                            review:
-                        </label>
-                        <textarea
-                        name="review"
-                        id="review"
-                        value = {formData.review }
-                        onChange={handleFormChange}>
-                        </textarea>
+                    {/* side entry of journal */}
+                    <div className="review-task">
+                        {/* task input pane */}
+                        <div>
+                            <h3>Tasks:</h3>
+                            <div className="task-container task-list">
+                                {formData.tasks.map((element, index)=> <TaskSelect key={index} task={element} />)}
+                            </div>
+                            <div className="task-input-container">
+                                <input
+                                type="text"
+                                onChange={handleTaskChange}
+                                className=""
+                                value = {taskInput.task || ""}
+                                placeholder="Enter Task"
+                                />
+                                <button
+                                type="button"
+                                onClick={addTask}>
+                                    Add Task
+                                </button>
+                            </div>
+                        </div>
+                        {/* review input fields */}
+                        <div>
+                            <label 
+                            className="entry-label"
+                            htmlFor="review">
+                                review:
+                            </label>
+                            <textarea
+                            name="review"
+                            id="review"
+                            className="review-area"
+                            value = {formData.review }
+                            onChange={handleFormChange}>
+                            </textarea>
+                        </div>
                     </div>
                 </div>
 
                 {/* submit button container */}
-                <div>
+                <div className="submit-container">
                     <button
                     type="submit">
                         Update Entry

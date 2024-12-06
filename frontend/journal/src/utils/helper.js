@@ -11,7 +11,7 @@ function isAccessTokenExpired() {
         return true; // Invalid token, treat as expired
       }
       const currentTime = Math.floor(Date.now() / 1000);
-      return currentTime >= decodedToken.exp; // Token is expired or expiring now
+      return currentTime >= decodedToken?.exp; // Token is expired or expiring now
     } catch (error) {
       console.error("Error decoding JWT:", error.message);
       return true; // Treat as expired on error

@@ -9,13 +9,15 @@ export default function Landingpage(){
     }
 
     return(
-        <div>
-            <h1>
-                Your Journal
-            </h1>
-            <button onClick={openJournal}>
-                Go In
-            </button>
+        <div className="landing-container">
+            <h1 className="go-heading">
+                    Want To Write?
+                </h1>
+            <div className="landing-elements">
+                <button className="go-in" onClick={openJournal}>
+                    Go Ahead
+                </button>
+            </div>
         </div>
     )
 }

@@ -1,42 +1,429 @@
-/* .App {
+:root {
+  --brown: rgb(62, 39, 35);
+  --praise: rgb(210, 185, 177);
+  --light-brown: rgb(120, 90, 80);
+  --accent: rgb(233, 168, 127);
+  --background: rgb(248, 240, 235);
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Lato', sans-serif;
+  --font-handwritten: 'Caveat', cursive;
+}
+
+
+::-webkit-scrollbar{
+  display: none;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', cursive, sans-serif;
+}
+
+html, body {
+  height: 100vh;
+  background-color: var(--background);
+  color: var(--brown);
+  font-family: var(--font-body);
+
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+}
+
+.landing-container {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("./img/journal.jpg");
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.go-heading {
+  font-size: 48px;
+  font-family: var(--font-heading);
+  color: var(--praise);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  transition: all 0.5s ease-in-out;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.go-heading:hover {
+  font-size: 60px;
+  color: var(--accent);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* .landing-elements {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 20px;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.5s ease-in-out;
+} */
+
+.go-in {
+  font-size: 16px;
+  padding: 12px 30px;
+  border-radius: 12px;
+  border: none;
+  background: var(--brown);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.5s, transform 0.3s ease-in-out, box-shadow 0.3s;
+}
+
+.go-in:hover {
+  background: var(--accent);
+  transform: translateY(-8px);
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+.journal{
+  height: 100vh;
+  width: 100vw;
+}
+
+/* user info at the top */
+.user-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--brown);
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* navigation bar */
+.navigation {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 15px 20px;
+  background-color: var(--praise);
+  font-size: 15px;
+  color: var(--light-brown);
+  display: flex;
+  justify-content:space-evenly;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
+.navigation-mobile{
+  display: none;
+}
 
-.border {
-  border: thick solid black;
+.navigation a {
+  text-decoration: none;
+  color: var(--brown);
+  font-weight: bold;
+  margin: 0 15px;
+  transition: color 0.3s ease;
+}
+
+.navigation a:hover {
+  color: var(--accent);
+}
+
+.navigation .nav-brand {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.navigation .nav-links {
+  display: flex;
+  align-items: center;
+}
+
+
+.form-group {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+.text {
+  grid-column: 1 / 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.text-area {
+  width: 100%;
+  height: 561px;
+  padding: 15px;
+  font-size: 16px;
+  border: 1px solid var(--brown, #ccc);
+  border-radius: 8px;
+  resize: none;
+  box-shadow: inset 0px 0px 200px rgba(249, 249, 249, 0.8);
+  overflow: scroll;
+}
+
+.entry-label, h3{
+  color: var(--praise);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.review-area {
+  width: 100%;
+  height: 250px;
+  padding: 15px;
+  font-size: 16px;
+  border: 1px solid var(--brown, #ccc);
+  border-radius: 8px;
+  resize: none;
+  overflow: scroll;
+  
+}
+
+.task-container{
+  width: 100%;
+  height: 200px;
+  padding: 15px;
+  font-size: 16px;
+  border: 1px solid var(--brown, #ccc);
+  border-radius: 8px;
+  resize: none;
+  background: #f9f9f9;
+  overflow: scroll;
+}
+
+textarea{
+  padding: 10px;
+}
+
+textarea::placeholder {
+  color: #aaa;
+}
+
+.review-task {
+  grid-column: 2 / 3;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.task-container,
+.review-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-list {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+input[type="text"] {
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--brown, #ff8a65);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #ff7043;
+}
+
+/* Submit button styling */
+.submit-container {
+  display: flex;
+  justify-content: center;
+}
+
+button[type="submit"] {
+  width: 200px;
+}
+
+.diary{
+  background-image: url("./img/holding-book.jpg");
+}
+
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* background-color: var(--praise); */
+  border: 1px solid var(--light-brown);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 400px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  background-color: rgba(210, 185, 177, 0.9);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-text p, 
+.card-review p {
+  margin-bottom: 15px;
+  color: var(--brown);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.card-review {
+  background-color: rgba(255, 171, 145, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.card-timestamp p {
+  font-size: 14px;
+  color: black;
+  text-align: right;
+  margin-top: 10px;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.card-text p, 
+.card-review p, 
+.task-container, 
+.review-area, 
+.text-area {
+  font-family: var(--font-body);
+  font-size: 16px;
+}
+
+.task-list, 
+.review-task {
+  font-family: var(--font-handwritten);
+  font-size: 18px;
+  color: var(--brown);
+}
+
+.navigation .nav-brand {
+  font-family: var(--font-heading);
+}
+
+input, textarea {
+  font-family: var(--font-body);
+  background-color: #F9F9F9;  /* Light beige for background */
+  border: 1px solid var(--brown);  /* Dark brown border */
+  color: var(--brown);
+}
+
+.entries-page{
+  display: grid;
+  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  padding: 50px 20px 20px; /* Adds space below the navigation */
+  background-image: url("./img/open_brown.jpg");
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--background);
+}
+
+.auth-container{
+  display: flex;
+  font-size: 14px;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  flex-direction: column;
+  background-image: url("./img/open_white.jpg");
+  background-size: cover;
+}
+
+.auth-elements p{
+  text-align: center;
+  font-size: 30px;
+}
+
+.auth-elements {
+  display: flex;
+  justify-content: center;
+  place-content: center;
+  flex-direction: column;
+  box-shadow: inset 0px 0px 200px rgba(0, 0, 0, 0.7);
+  width: 300px;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.auth-elements label{
+  color: var(--accent);
+}
+
+.auth-submit{
+  width: 100%;
+}
+
+.auth-submit > button {
+  width: 100%;
+}
+
+@media screen and (max-width:500px) {
+  .form-group {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+  }
+
+  .navigation{
+    display: none;
+  }
+
+  .navigation-mobile{
+    display: block;
+  }
+}
+
+.empty{
+  display: grid;
+  place-content: center;
 }
