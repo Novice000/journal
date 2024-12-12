@@ -19,7 +19,6 @@ A full-stack web application for managing personal journal entries. Users can re
 │   │   ├── tests.py            # Backend tests
 │   │   ├── urls.py             # API routes
 │   │   └── views.py            # API views
-│   ├── db                     # MongoDB integration setup
 │   ├── journal
 │   │   ├── settings.py         # Backend settings
 │   │   ├── urls.py             # Project-level URL configuration
@@ -58,13 +57,13 @@ A full-stack web application for managing personal journal entries. Users can re
 2. **Protected Routes**: Secured pages accessible only to authenticated users.
 3. **Journal Management**:
    - Create, view, update, and delete personal journal entries.
-   - Responsive design for seamless use on mobile and desktop devices.
+   - Responsive design for mobile and desktop devices.
 4. **Utility Functions**:
    - `helper.js` for token expiration and refresh handling.
    - `protected.js` for route protection.
 
 ### Backend (Django with MongoDB)
-1. **Database**: MongoDB for scalable, flexible data storage.
+1. **Database**: MongoDB for flexible data storage.
 2. **RESTful API**:
    - Token-based authentication for secure API interaction.
    - CRUD operations for managing user data and journal entries.
@@ -80,7 +79,7 @@ A full-stack web application for managing personal journal entries. Users can re
 - Python 3.10 or above
 - Django
 - Node.js 16.x or above
-- MongoDB (running locally or in the cloud)
+- MongoDB (local or cloud-based)
 - npm or yarn
 
 ### Backend Setup
@@ -128,9 +127,48 @@ A full-stack web application for managing personal journal entries. Users can re
 
 ---
 
+## File Breakdown
+
+### Backend
+
+- **`app/__init__.py`**: Initializes the app and ensures the app directory is treated as a Python package.
+- **`app/admin.py`**: Contains Django admin interface configurations for MongoDB models.
+- **`app/apps.py`**: Defines the application configuration for the app.
+- **`app/authentication.py`**: Custom authentication logic, including user login and JWT handling.
+- **`app/models.py`**: Defines MongoDB models for journal entries and user data using Django's ORM and MongoDB integration.
+- **`app/serializers.py`**: Serializes and deserializes data for API interactions, ensuring proper structure and validation.
+- **`app/tests.py`**: Contains backend unit tests for the API endpoints and authentication logic.
+- **`app/urls.py`**: Defines URL routes for the journal API, linking views to their corresponding endpoints.
+- **`app/views.py`**: API views that define the logic for handling requests to CRUD journal entries and user authentication.
+- **`journal/settings.py`**: Configuration settings for the Django project, including MongoDB connection settings and security options.
+- **`journal/urls.py`**: Project-level URL routing, including references to app-specific URLs.
+- **`journal/wsgi.py`**: WSGI entry point for serving the Django app in production.
+- **`manage.py`**: Django management script for running server commands and performing database migrations.
+- **`populate.py`**: Script to seed the database with sample data (e.g., test users or journal entries).
+- **`requirements.txt`**: Lists Python dependencies for the backend (e.g., Django, djangorestframework, PyJWT).
+
+### Frontend
+
+- **`frontend/journal/src/App.js`**: Main application component that handles routing and includes the layout of the app.
+- **`frontend/journal/src/Entries.js`**: Displays a list of journal entries, allowing the user to view details and manage entries.
+- **`frontend/journal/src/Entry.js`**: A detailed view of a single journal entry, allowing users to read and edit.
+- **`frontend/journal/src/Error.js`**: Handles error displays, ensuring proper messaging for users when things go wrong.
+- **`frontend/journal/src/Journal.js`**: Dashboard component that manages overall journal entry CRUD operations and user interactions.
+- **`frontend/journal/src/Landing.js`**: Landing page component with options to register, log in, and navigate to the journal management section.
+- **`frontend/journal/src/Login.js`**: Login form for users to authenticate with their credentials.
+- **`frontend/journal/src/Register.js`**: Registration form that allows new users to sign up for the app.
+- **`frontend/journal/src/UpdateEntry.js`**: Form for updating an existing journal entry.
+- **`frontend/journal/src/utils/config.js`**: Contains configuration for Axios, including base API URL and headers.
+- **`frontend/journal/src/utils/helper.js`**: Utility functions, such as token expiration handling and user authentication.
+- **`frontend/journal/src/utils/protected.js`**: A higher-order component (HOC) for protecting routes, ensuring only authenticated users can access them.
+- **`frontend/journal/src/styles/img/`**: Directory containing image assets (e.g., logos or icons used in the app).
+- **`frontend/journal/src/index.js`**: Entry point for the React application, responsible for rendering the app to the DOM.
+- **`frontend/package.json`**: Lists frontend dependencies and scripts for building and running the React app.
+
+---
+
 ## Future Improvements
 
-- Integration with cloud-based MongoDB (e.g., MongoDB Atlas).
 - Add automated tests for frontend components.
 - Deploy the application on platforms like AWS or Heroku.
 - Implement tagging and searching for journal entries.
